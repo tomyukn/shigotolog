@@ -1,0 +1,13 @@
+[package]
+name = "sgt"
+version.workspace = true
+authors.workspace = true
+edition = "2021"
+description = "Shigotolog CLI"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+directories = "5.0"
+inquire = { version = "0.7.5", features = ["date"] }
+shigotolog = { path = "../core" }
+tabled = "0.17"

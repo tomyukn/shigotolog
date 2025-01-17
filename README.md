@@ -1,1 +1,3 @@
 # shigotolog
+
+Log your work!
