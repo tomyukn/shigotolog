@@ -77,7 +77,7 @@ struct TaskRecordRow {
     date: String,
     #[tabled(rename = "Begin")]
     begin: String,
-    #[tabled(rename = "End")]
+    #[tabled(rename = "End  ")]
     end: String,
     #[tabled(rename = "Duration")]
     duration: String,
@@ -119,7 +119,7 @@ pub fn record_list(records: &[TaskRecord]) -> String {
 struct TotalDuration {
     #[tabled(rename = "Begin")]
     begin: String,
-    #[tabled(rename = "End")]
+    #[tabled(rename = "End  ")]
     end: String,
     #[tabled(rename = "Duration")]
     duration: String,
