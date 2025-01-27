@@ -176,8 +176,7 @@ pub fn task_durations(records: &[TaskRecord]) -> String {
         return "".into();
     }
 
-    let mut durations = summary.task_durations.iter().collect::<Vec<_>>();
-    durations.sort_by(|a, b| a.0.cmp(b.0));
+    let durations = summary.task_durations.iter().collect::<Vec<_>>();
 
     let total_time = durations
         .iter()
@@ -185,7 +184,7 @@ pub fn task_durations(records: &[TaskRecord]) -> String {
         .reduce(|acc, dur| acc + dur)
         .unwrap();
 
-    let task_durations = durations
+    let mut task_durations = durations
         .iter()
         .map(|(task, duration)| TaskDuration {
             task: task.to_string(),
@@ -196,6 +195,8 @@ pub fn task_durations(records: &[TaskRecord]) -> String {
             ),
         })
         .collect::<Vec<_>>();
+    // sort in descending order of duration
+    task_durations.sort_by(|a, b| b.duration.cmp(&a.duration));
 
     build_table(task_durations)
         .with(Modify::new(ByColumnName::new("Duration")).with(Alignment::right()))
