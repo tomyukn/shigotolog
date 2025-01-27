@@ -139,8 +139,9 @@ impl From<&[TaskRecord]> for TaskSummary {
 
         let end = work_records
             .clone()
-            .filter_map(|record| record.end.clone())
-            .max();
+            .map(|record| record.end.clone())
+            .last()
+            .unwrap();
 
         let total_duration = work_records
             .clone()
@@ -172,5 +173,48 @@ impl From<&[TaskRecord]> for TaskSummary {
             task_durations,
             break_times,
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_task_summary_time() {
+        let task1 = Task::new(None, Some("a"), None, None, "", false, true);
+        let beg1 = TaskTime::parse("2021-01-01T10:00:00").unwrap();
+        let end1 = TaskTime::parse("2021-01-01T12:00:00").unwrap();
+        let rec1 = TaskRecord::new(
+            None,
+            task1.clone(),
+            WorkingDate::from(beg1.clone()),
+            beg1.clone(),
+            Some(end1.clone()),
+        );
+
+        let task2 = Task::new(None, Some("b"), None, None, "", false, true);
+        let beg2 = TaskTime::parse("2021-01-01T13:00:00").unwrap();
+        let end2 = TaskTime::parse("2021-01-01T14:00:00").unwrap();
+        let rec2 = TaskRecord::new(
+            None,
+            task2,
+            WorkingDate::from(beg2.clone()),
+            beg2,
+            Some(end2.clone()),
+        );
+
+        let beg3 = TaskTime::parse("2021-01-01T14:00:00").unwrap();
+        let rec3 = TaskRecord::new(None, task1, WorkingDate::from(beg3.clone()), beg3, None);
+
+        // time filled
+        let ts1 = TaskSummary::from(&[rec1.clone(), rec2.clone()][..]);
+        assert_eq!(ts1.begin, beg1.clone());
+        assert_eq!(ts1.end, Some(end2));
+
+        // no end time
+        let ts2 = TaskSummary::from(&[rec1, rec2, rec3][..]);
+        assert_eq!(ts2.begin, beg1);
+        assert_eq!(ts2.end, None);
     }
 }
