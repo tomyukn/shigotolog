@@ -24,10 +24,10 @@ pub fn run(
     let current_time = TaskTime::now();
     let state = db.current_state(&date)?;
     let tasks = db.tasks()?;
-    let (task_map, task_names) = map_tasks(tasks);
+    let (task_map, keys) = map_tasks(tasks);
 
-    if let Ok(task_name) = prompt::select(task_names, "Select task:") {
-        let task = task_map.get(&task_name).unwrap();
+    if let Ok(key) = prompt::select(keys, "Select task:") {
+        let task = task_map.get(&key).unwrap();
         if let Ok(begin_hm) =
             prompt::text_input_with_default("Begin time:", &current_time.to_string_hm())
         {

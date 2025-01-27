@@ -3,12 +3,18 @@ use std::collections::HashMap;
 use shigotolog::datetime::TimeDisplay;
 use shigotolog::task::{Task, TaskRecord};
 
+/// Creates a map that is used as a lookup table for tasks.
+///
+/// The key is a string that combines the task levels and description.
 pub fn map_tasks(tasks: Vec<Task>) -> (HashMap<String, Task>, Vec<String>) {
     let mut map = HashMap::new();
     let mut keys = vec![];
 
     for task in tasks {
-        let key = task.format_name("/");
+        let mut key = task.format_name("/");
+        if !task.description.is_empty() {
+            key += &format!(" - {}", &task.description)
+        }
 
         map.insert(key.clone(), task);
         keys.push(key);

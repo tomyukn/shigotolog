@@ -9,12 +9,12 @@ use crate::util::{map_tasks, push_front};
 
 pub fn run(db: &SQLiteDatabase) -> Result<(), Box<dyn Error>> {
     let tasks = db.tasks()?;
-    let (mut task_map, names) = map_tasks(tasks);
+    let (mut task_map, keys) = map_tasks(tasks);
 
-    let task_names = push_front("new".to_string(), names);
-    task_map.insert(task_names[0].clone(), Task::default());
+    let candidates = push_front("new".to_string(), keys);
+    task_map.insert(candidates[0].clone(), Task::default());
 
-    if let Ok(task_name) = prompt::select(task_names, "Select new or updating task:") {
+    if let Ok(task_name) = prompt::select(candidates, "Select new or updating task:") {
         let ans_default = task_name == "new";
         let task = task_map.get_mut(&task_name).unwrap();
 
